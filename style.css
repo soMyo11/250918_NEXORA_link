@@ -156,7 +156,7 @@ body { cursor: auto; }
   position: fixed;
   top: 0; left: 0;
   width: 80px; height: 80px;
-  background: url('/img/pointer.png') no-repeat center/contain;
+  background: url('./img/pointer.png') no-repeat center/contain;
   pointer-events: none;
   transform: translate3d(-9999px, -9999px, 0) translate(-50%, -50%);
   opacity: 0;
@@ -178,7 +178,7 @@ body { cursor: auto; }
   position: relative;
   width: 100%;
   height: 100vh;
-  background: url('/img/consulting-1.jpg') top/cover no-repeat;
+  background: url('./img/consulting-1.jpg') top/cover no-repeat;
   color: #fff;
 }
 .sec-1 .bg {
@@ -447,7 +447,7 @@ body { cursor: auto; }
   color: #fff;
   width: 100%;
   height: 400px;
-  background: url(/img/inquiry.jpg) center center / cover no-repeat;
+  background: url(./img/inquiry.jpg) center center / cover no-repeat;
 }
 .sec-5 .inq-list {
   z-index: 10;
