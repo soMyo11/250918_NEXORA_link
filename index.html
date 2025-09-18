@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="KR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>넥소라</title>
+
+  <!-- 웹폰트 프리텐다드 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
+
+  <!-- Swiper CSS/JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- css, js 연결 -->
+  <link rel="stylesheet" href="./style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <section class="sec sec-1">
+    <div class="bg"></div>
+    <div class="title">
+      <h2 class="title-tt">한국 중소기업 성장의 원팀, 넥소라입니다.</h2>
+      <p class="title-st">
+        조달부터 자금, 인증, 경영, 사옥이전까지<br>
+        기업의 성장을 한팀에서 함께합니다.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec sec-2" id="sec-2">
+    <div class="sec2-stage">
+      <div class="center-line" aria-hidden="true"></div>
+      <div class="video-reveal">
+        
+        <div class="video-title">
+          <p class="video-tt">
+            넥소라는 복잡한 제도와 절차를 기업 맞춤형 전략으로 풀어내어,<br>
+            <strong>공공조달 진입</strong>부터 <strong>자금 조달, 인증 취득, 경영 안정, 사육 이전</strong>까지
+          </p>
+          <span class="v-t-line"></span>
+          <p class="video-tt">
+            성장에 필요한 모든 해답을 제공합니다.
+          </p>
+        </div>
+
+        <video
+          class="hero-video"
+          src="/img/272519_small.mp4"
+          autoplay
+          muted
+          playsinline
+          loop>
+        </video>
+
+        <div class="video-overlay"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="custom-cursor"></div>
+
+  <section class="sec sec-3">
+    <div class="con">
+      <div class="cons-title">
+        <h3 class="cons-t-tt">대표 컨설팅 서비스</h3>
+        <p class="cons-t-st">중소기업이 성장하는 데 필요한 핵심 영역을 전문가와 함께 해결하세요.</p>
+      </div>
+
+      <!-- ▼▼▼ 기존 .cons-menu → Swiper 컨테이너로 변경 ▼▼▼ -->
+      <div class="cons-swiper swiper">
+        <div class="swiper-wrapper">
+          <!-- cons-1 -->
+          <div class="swiper-slide">
+            <div class="cons-list">
+              <div class="cons-img-box">
+                <img class="cons-img cons-img-1" src="/img/consulting-1.jpg" alt="기업자금">
+              </div>
+              <div class="cons-text">
+                <h4 class="cons-tt">기업자금 컨설팅</h4>
+                <p class="cons-st">운전·시설·대환·지원금을 기업에 맞춤조달</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- cons-2 -->
+          <div class="swiper-slide">
+            <div class="cons-list">
+              <div class="cons-img-box">
+                <img class="cons-img cons-img-2" src="/img/consulting-2.jpg" alt="기업인증">
+              </div>
+              <div class="cons-text">
+                <h4 class="cons-tt">기업인증 컨설팅</h4>
+                <p class="cons-st">특허와 벤처 · 이노 · 메인 · ISO · ESG로<br>등급과 기회를 높입니다</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- cons-3 -->
+          <div class="swiper-slide">
+            <div class="cons-list">
+              <div class="cons-img-box">
+                <img class="cons-img cons-img-3" src="/img/consulting-3.jpg" alt="조달제품">
+              </div>
+              <div class="cons-text">
+                <h4 class="cons-tt">조달제품 컨설팅</h4>
+                <p class="cons-st">성능인증부터 나라장터·조달청 공공 조달 까지, 한 번에</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- cons-4 -->
+          <div class="swiper-slide">
+            <div class="cons-list">
+              <div class="cons-img-box">
+                <img class="cons-img cons-img-4" src="/img/consulting-4.jpg" alt="법인종합">
+              </div>
+              <div class="cons-text">
+                <h4 class="cons-tt">법인종합 컨설팅</h4>
+                <p class="cons-st">재무·세무·노무·가업승계를 니즈에 맞게 설계</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- cons-5 -->
+          <div class="swiper-slide">
+            <div class="cons-list">
+              <div class="cons-img-box">
+                <img class="cons-img cons-img-5" src="/img/consulting-5.jpg" alt="사옥이전">
+              </div>
+              <div class="cons-text">
+                <h4 class="cons-tt">사옥이전 컨설팅</h4>
+                <p class="cons-st">전국 중개협회 네트워크<br>맞춤 사무실 · 공장 · 창고 · 사옥 매칭</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-4">
+    <div class="review-box">
+      <div class="review-title">
+        <h3 class="review-tt">넥소라와 함께한<br>기업들의 사례</h3>
+        <p class="review-st">넥소라와 함께 도전하고 성과를 이룬 이야기들입니다.</p>
+      </div>
+
+      <div class="review-menu swiper">
+        <div class="swiper-wrapper">
+          <!-- 사례 1 -->
+          <div class="review-list swiper-slide">
+            <div class="review-list-box">
+              <h4 class="r-l-tt">
+                애국가는 대한민국의 국가이다.<br> 
+                '나라를 사랑하는 노래' 라는 뜻이다
+              </h4>
+              <p class="r-l-st">
+                현재 애국가의 가락(작곡)은 안익태가 작곡하였고, 이 가락만이 현재 공식적인 가락<br>
+                로 사용되고 있으며 가사는 대한민국 임시정부 시기에서 거의 그대로 전승되었다.<br>
+                정확히는 대한민국 임시정부에서는 안익태가 작곡한 현재의 가락에 따른 애국가<br>
+                가 1940년 12월 20일부터 사용되었다.
+              </p>
+            </div>
+            <p class="r-l-day">2024-12-01</p>
+          </div>
+
+          <!-- 사례 2 -->
+          <div class="review-list swiper-slide">
+            <div class="review-list-box">
+              <h4 class="r-l-tt">
+                1980년대 TV 방송종료 당시 나온<br>
+                경음악의 애국가
+              </h4>
+              <p class="r-l-st">
+                1991년까지 가사없는 경음악 버전을 틀어줬으며, 이후 가사있는 버전으로 바뀌고<br>
+                1998년까지 KBS는 사장조, MBC는 1절 합창/2절 여성 독창/3절 남성 독창/4절<br>
+                합창 형태의 가장조 버전을 틀어줬다.
+              </p>
+            </div>
+            <p class="r-l-day">2024-12-01</p>
+          </div>
+
+          <!-- 사례 3 -->
+          <div class="review-list swiper-slide">
+            <div class="review-list-box">
+              <h4 class="r-l-tt">
+                애국가는 대한민국의 국가이다.<br> 
+                '나라를 사랑하는 노래' 라는 뜻이다
+              </h4>
+              <p class="r-l-st">
+                현재 애국가의 가락(작곡)은 안익태가 작곡하였고, 이 가락만이 현재 공식적인 가락<br>
+                로 사용되고 있으며 가사는 대한민국 임시정부 시기에서 거의 그대로 전승되었다.<br>
+                정확히는 대한민국 임시정부에서는 안익태가 작곡한 현재의 가락에 따른 애국가<br>
+                가 1940년 12월 20일부터 사용되었다.
+              </p>
+            </div>
+            <p class="r-l-day">2024-12-01</p>
+          </div>
+
+          <!-- 사례 4 -->
+          <div class="review-list swiper-slide">
+            <div class="review-list-box">
+              <h4 class="r-l-tt">
+                1980년대 TV 방송종료 당시 나온<br>
+                경음악의 애국가
+              </h4>
+              <p class="r-l-st">
+                1991년까지 가사없는 경음악 버전을 틀어줬으며, 이후 가사있는 버전으로 바뀌고<br>
+                1998년까지 KBS는 사장조, MBC는 1절 합창/2절 여성 독창/3절 남성 독창/4절<br>
+                합창 형태의 가장조 버전을 틀어줬다.
+              </p>
+            </div>
+            <p class="r-l-day">2024-12-01</p>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+    <!-- 네비게이션/페이지네이션 -->
+        <div class="rv-nav-topright">
+          <button class="rv-btn rv-prev" aria-label="이전">
+            <img src="/img/prev-btn.png" alt="이전">
+          </button>
+          <button class="rv-btn rv-next" aria-label="다음">
+            <img src="/img/next-btn.png" alt="다음">
+          </button>
+        </div>
+
+  </section>
+
+  <section class="sec sec-5">
+    <div class="con">
+      <div class="inquiry">
+        <div class="inquiry-title">
+          <h3 class="inq-tt">성장에 필요한 모든 연결</h3>
+          <p class="inq-st">기업 성장의 길, 정보와 연결에서 시작됩니다.</p>
+        </div>
+
+        <div class="inquiry-box">
+          <div class="inq-list">
+            <h3 class="inq-l-tt">문의하기</h3>
+            <p class="inq-l-st">
+              기업 성장의 해답,<br>
+              문의 한 번으로 시작하세요.
+            </p>
+          </div>
+
+          <div class="inq-list">
+            <h3 class="inq-l-tt">블로그</h3>
+            <p class="inq-l-st">
+              시장 동향, 인사이트,<br>
+              전문가들의 의견을 읽어보세요.
+            </p>
+          </div>
+
+          <div class="inq-bg"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="footer">
+    <div class="con">
+      <div class="left-box">
+        <div class="logo-box">
+          <img class="logo-img" src="/img/logo.png" alt="넥소러 로고">
+        </div>
+        <div class="information">
+          <p class="infor-tt">
+            인천 연수구 인천타워대로 301, A동 1137호 (본사)<br>
+            대전 서구 둔산북로 121 아너스빌 오피스텔 710호 (대전지사)<br>
+            서울 마포구 마포대로 130, 5층 (서울지사)
+          </p>
+          <p class="about-t">Copyright © NEXORAconsultant. All Rights Reserved.</p>
+        </div>
+      </div>
+
+      <div class="right-box">
+        <a class="sns-box" href="#" alt="블로그 바로가기">
+          <div class="blog-box">
+            <p class="about-t">블로그 바로가기</p>
+            <img class="blog-btn" src="/img/blog-btn.png" alt="+">
+          </div>
+        </a>
+        <div class="sns-list">
+          <a href="#">sns</a>
+          <a href="#">sns</a>
+          <a href="#">sns</a>
+          <a href="#">sns</a>
+        </div>
+        <div class="about">
+          <a class="about-t" href="#">개인정보 처리방침</a>
+          <p class="about-t">회사문의 : 1234-5678 · nexora@gmail.com</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
