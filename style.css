@@ -266,8 +266,12 @@ body { cursor: auto; }
 /* ------------------------------------------- sec-2 end ------------------------------------------- */
 
 /* ------------------------------------------- sec-3 start ------------------------------------------- */
+.sec-3 {
+  display: flex;
+  align-items: center;
+}
 .sec-3 .con {
-  padding: 220px 140px;
+  padding: 0 140px;
   display: flex;
   flex-direction: column;
   gap: 106px;
