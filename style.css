@@ -269,12 +269,15 @@ body { cursor: auto; }
 .sec-3 {
   display: flex;
   align-items: center;
+  overflow:hidden; 
 }
 .sec-3 .con {
   padding: 0 140px;
   display: flex;
   flex-direction: column;
   gap: 106px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .sec-3 .cons-t-tt {
   margin-bottom: 22px;
