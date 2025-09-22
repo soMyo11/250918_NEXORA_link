@@ -1,280 +1,305 @@
-// GSAP(섹션2 영상 리빌 & 재시작) + Swiper(가로 드래그/휠) + 커스텀 커서(히트테스트)
+// ==============================
+// NEXORA - script.js (이슈 3건 반영 전면 교체본)
+// ==============================
+
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
+  const $  = (s, c=document) => c.querySelector(s);
+  const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 
-    const videoEl = document.querySelector('.hero-video');
+// ─────────────────────────────────────
+// SECTION 2 (ScrollTrigger)
+// ─────────────────────────────────────
+(function initSection2_ST(){
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
 
-    // 1) 리빌 타임라인: 항상 0에서 시작하도록 paused로 구성
-    const revealTl = gsap.timeline({ paused: true });
+  const sec2    = document.querySelector('#sec-2');
+  const line    = document.querySelector('.center-line');
+  const reveal  = document.querySelector('.video-reveal');
+  const videoEl = document.querySelector('.hero-video');
+  if (!sec2 || !line || !reveal || !videoEl) return;
 
-    // 초기 상태 세팅(안전)
-    revealTl.set('.center-line',  { scaleY: 0, opacity: 1, transformOrigin: 'center center' })
-            .set('.video-reveal', { opacity: 0, '--gap': '50%' });
+  // 초기 세팅
+  gsap.set(line,   { visibility:'hidden', opacity:0, scaleY:0, transformOrigin:'top center' });
+  gsap.set(reveal, { opacity:1, '--gap':'50%' });
 
-    // 라인 → 비디오 페이드인 → 좌우 확장 → 라인 페이드아웃
-    revealTl
-      .to('.center-line', {
-        scaleY: 1,
-        duration: 1.8,
-        ease: 'power3.inOut'
-      })
-      .to('.video-reveal', {
-        opacity: 1,
-        duration: 0.25,
-        ease: 'power1.out'
-      }, '-=0.6')
-      .to('.video-reveal', {
-        '--gap': '0%',
-        duration: 1.2,
-        ease: 'power3.inOut'
-      }, '-=0.05')
-      .to('.center-line', {
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power2.out'
-      }, '-=0.6');
+  const tl = gsap.timeline({ paused:true, defaults:{ immediateRender:false } });
 
-    // 2) 섹션 가시성에 따라 타임라인/영상 제어
-    ScrollTrigger.create({
-      trigger: '#sec-2',
-      start: 'top 100%',
-      end: 'bottom',
+  tl
+    // 라인: 위에서 아래로만 쭉 확장
+    .set(line, { visibility:'visible', opacity:1 })
+    .to(line, { scaleY:1, duration:1.2, ease:'power3.out' }, 0)
 
-      onEnter: () => {
-        // 라인 등장부터 다시
-        revealTl.restart(true, false);
-        if (videoEl) { videoEl.currentTime = 0; videoEl.play().catch(()=>{}); }
+    // 비디오 reveal 시작과 동시에 라인 즉시 제거
+    .addLabel('reveal')
+    .set(line, { opacity:0, visibility:'hidden' }, 'reveal')
+    .to(reveal, { '--gap':'0%', duration:1.0, ease:'power3.inOut' }, 'reveal');
+
+  let revealedOnce = false;
+
+  const playVideoSmooth = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { videoEl.play().catch(()=>{}); });
+    });
+  };
+
+  ScrollTrigger.create({
+    trigger: sec2,
+    start: 'top 75%',
+    end: 'bottom top',
+    onEnter: () => {
+      if (!revealedOnce) {
+        if (videoEl.readyState >= 2) { tl.play(0); revealedOnce = true; }
+        else {
+          const onReady = () => { tl.play(0); revealedOnce = true; videoEl.removeEventListener('canplay', onReady); };
+          videoEl.addEventListener('canplay', onReady, { once:true });
+        }
+      }
+      playVideoSmooth();
+    },
+    onEnterBack: () => playVideoSmooth(),
+    onLeave:     () => { try { videoEl.pause(); } catch(_){} },
+    onLeaveBack: () => { try { videoEl.pause(); } catch(_){} }
+  });
+})();
+
+
+
+
+  // ─────────────────────────────────────
+  // 2) Swiper (섹션3/섹션4) + 드래그 중 페이징 잠금
+  // ─────────────────────────────────────
+  let isDraggingSwiper = false;     // ★ 섹션 페이징과 충돌 방지용 플래그
+  let dragReleaseTimer = null;
+
+  const setDragging = (v) => {
+    isDraggingSwiper = v;
+    if (dragReleaseTimer) { clearTimeout(dragReleaseTimer); dragReleaseTimer = null; }
+    if (!v) {
+      // 드래그 종료 후 잠깐 더 유예 (남은 휠/관성 입력 무시)
+      dragReleaseTimer = setTimeout(() => { isDraggingSwiper = false; }, 180);
+    }
+  };
+
+  (function initSwipers(){
+    // 섹션3
+    const consSwiper = new Swiper('.cons-swiper', {
+      slidesPerView: 'auto',
+      spaceBetween: 105,
+      centeredSlides: false,
+      watchOverflow: true,
+      simulateTouch: true,
+      threshold: 6,
+      touchRatio: 1,
+      freeMode: { enabled:true, momentum:true, momentumBounce:false, momentumVelocityRatio:0.9 },
+      grabCursor: true,
+      mousewheel: {
+        enabled: true,
+        forceToAxis: true,
+        releaseOnEdges: true,
+        sensitivity: 0.35,
+        thresholdDelta: 12,
+        thresholdTime: 40,
+        eventsTarget: '.cons-swiper'
       },
-      onEnterBack: () => {
-        revealTl.restart(true, false);
-        if (videoEl) { videoEl.currentTime = 0; videoEl.play().catch(()=>{}); }
+      preventClicks: true,
+      preventClicksPropagation: true,
+      passiveListeners: true,
+      updateOnWindowResize: true,
+      on: {
+        touchStart(){ setDragging(true); },
+        sliderFirstMove(){ setDragging(true); },
+        touchEnd(){ setDragging(false); },
+        transitionEnd(){ /* no-op */ },
       },
-
-      onLeave: () => {
-        // 화면을 벗어나면 정지 + 상태 초기화(다음 입장 때 라인부터)
-        revealTl.pause(0); // 타임라인을 0으로 되감아 둠
-        if (videoEl) videoEl.pause();
-      },
-      onLeaveBack: () => {
-        revealTl.pause(0);
-        if (videoEl) videoEl.pause();
+      breakpoints: {
+        1440:{ spaceBetween: 90 },
+        1280:{ spaceBetween: 72 },
+        1024:{ spaceBetween: 56 },
+        768: { spaceBetween: 32 },
+        480: { spaceBetween: 24 }
       }
     });
-  }
-  // ─────────────────────────────────────
-  // 1) Swiper (좌우 드래그/휠)
-  // ─────────────────────────────────────
-  const consSwiper = new Swiper('.cons-swiper', {
-    slidesPerView: 'auto',
-    spaceBetween: 105,
-    centeredSlides: false,
-    watchOverflow: true,
-    simulateTouch: true,
-    threshold: 10,
-    touchRatio: 1,
-    freeMode: { enabled: true, momentum: true, momentumBounce: false },
-    mousewheel: {
-      enabled: true, forceToAxis: true, releaseOnEdges: true,
-      sensitivity: 0.3, thresholdDelta: 10, thresholdTime: 40,
-      eventsTarget: '.cons-swiper'
-    },
-    breakpoints: {
-      1440: { spaceBetween: 90 },
-      1280: { spaceBetween: 72 },
-      1024: { spaceBetween: 56 },
-      768:  { spaceBetween: 32 },
-      480:  { spaceBetween: 24 }
-    }
-  });
+
+    // 성능 힌트(이미지/카드에 will-change 부여)
+    $$('.sec-3 .cons-img, .sec-3 .cons-list').forEach(el => { el.style.willChange = 'transform'; });
+
+    // 섹션4
+    new Swiper('.sec-4 .review-menu', {
+      direction: 'horizontal',
+      slidesPerView: 'auto',
+      spaceBetween: 20,
+      loop: false,
+      navigation: { nextEl: '.rv-nav-topright .rv-next', prevEl: '.rv-nav-topright .rv-prev' },
+      grabCursor: true,
+      preventClicks: true,
+      preventClicksPropagation: true,
+    });
+  })();
 
   // ─────────────────────────────────────
-  // 2) 커스텀 커서 (히트테스트 기반)
+  // 3) 섹션3 커스텀 커서 (사라짐/반전 문제 해결)
+  //    - 이미지 위에서 흰색 반전: .invert 클래스로 filter 토글
+  //    - mix-blend-mode 사용 안 함(일부 배경에서 안 보여 보이는 문제 방지)
   // ─────────────────────────────────────
-  const sec3 = document.querySelector('.sec-3');
-  const cursor = document.querySelector('.custom-cursor');
-  if (sec3 && cursor) {
+  // 섹션3 커스텀 커서 부분만 수정/교체
+  (function initCustomCursor(){
+    const sec3   = document.querySelector('.sec-3');
+    const cursor = document.querySelector('.custom-cursor');
+    if (!sec3 || !cursor) return;
+
     let x = -9999, y = -9999;
-    let rafId = null;
-    let pending = false;
+    let rafId = null, pending = false;
     let wasInside = false;
+    let rect = sec3.getBoundingClientRect();
 
-    function flush() {
+    const recalc = () => { rect = sec3.getBoundingClientRect(); };
+    const flush  = () => {
       rafId = null;
       if (!pending) return;
       pending = false;
 
       cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
 
-      const r = sec3.getBoundingClientRect();
-      const inside = (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom);
-
+      const inside = (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
       if (inside !== wasInside) {
         wasInside = inside;
-        if (inside) { cursor.classList.add('show'); document.body.style.cursor = 'none'; }
-        else { cursor.classList.remove('show', 'invert'); document.body.style.cursor = 'auto'; }
+        if (inside) {
+          cursor.classList.add('show');
+          document.body.classList.add('use-custom-cursor');   // ✅ 전역 숨김 ON
+        } else {
+          cursor.classList.remove('show','invert');
+          document.body.classList.remove('use-custom-cursor'); // ✅ 전역 숨김 OFF
+        }
       }
-    }
+    };
     const schedule = () => { if (!rafId) rafId = requestAnimationFrame(flush); };
 
-    const moveEvt = ('onpointerrawupdate' in window) ? 'pointerrawupdate' : 'pointermove';
-    document.addEventListener(moveEvt, (e) => {
+    document.addEventListener('pointermove', (e) => {
       x = e.clientX; y = e.clientY; pending = true; schedule();
-    }, { passive: true });
+    }, { passive:true });
 
-    sec3.addEventListener('pointerover', (e) => {
-      if (e.target.closest('.cons-img-box')) cursor.classList.add('invert');
-    });
-    sec3.addEventListener('pointerout', (e) => {
-      if (e.target.closest('.cons-img-box')) cursor.classList.remove('invert');
+    // 이미지 위에서만 반전
+    document.querySelectorAll('.sec-3 .cons-img-box').forEach(box => {
+      box.addEventListener('pointerenter', () => cursor.classList.add('invert'));
+      box.addEventListener('pointerleave', () => cursor.classList.remove('invert'));
     });
 
-    window.addEventListener('resize', () => { pending = true; schedule(); });
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      else if (!document.hidden && !rafId && pending) { rafId = requestAnimationFrame(flush); }
-    });
-  }
-});
+    window.addEventListener('resize', recalc, { passive:true });
+    window.addEventListener('scroll',  recalc, { passive:true });
+  })();
 
   // ─────────────────────────────────────
-  // sec-4 스와이퍼
+  // 4) 섹션 페이징 스크롤 (휠/터치/키보드)
+  //    - 드래그 중에는 페이징 비활성화
+  //    - 휠/터치 입력 1회당 정확히 1스텝만 이동(푸터→위로 갈 때 섹션5 건너뛰는 현상 방지)
   // ─────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  new Swiper('.sec-4 .review-menu', {
-    direction: 'horizontal',   // 가로 스와이프
-    slidesPerView: 'auto',     // 각 슬라이드 width(600px)를 기준으로 자동 배치
-    spaceBetween: 20,          // 슬라이드 간격
-    loop: false,               // 필요 시 true
-    navigation: {
-      nextEl: '.rv-nav-topright .rv-next',
-      prevEl: '.rv-nav-topright .rv-prev',
-    },
-  });
-});
+  (function initSectionPaging(){
+    const sections = $$('.sec');
+    if (!sections.length) return;
 
+    let offsets = [];
+    const calcOffsets = () => { offsets = sections.map(el => Math.round(el.getBoundingClientRect().top + window.scrollY)); };
+    calcOffsets();
 
-// ─────────────────────────────────────
-// 섹션 페이징 스크롤 (휠/터치/키보드)
-// ─────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const sections = Array.from(document.querySelectorAll('.sec'));
-  if (sections.length === 0) return;
-
-  // 섹션 Y좌표 캐시
-  let offsets = [];
-  const calcOffsets = () => {
-    offsets = sections.map(el => Math.round(el.getBoundingClientRect().top + window.scrollY));
-  };
-  calcOffsets();
-
-  // 리사이즈/폰트로드 등 레이아웃 변동 대응
-  let ro;
-  if ('ResizeObserver' in window) {
-    ro = new ResizeObserver(() => calcOffsets());
-    sections.forEach(s => ro.observe(s));
-  }
-  window.addEventListener('load', calcOffsets);
-  window.addEventListener('resize', () => { calcOffsets(); });
-
-  // 현재 섹션 index 찾기
-  const nearestIndex = () => {
-    const y = window.scrollY;
-    let idx = 0;
-    let min = Infinity;
-    for (let i = 0; i < offsets.length; i++) {
-      const d = Math.abs(offsets[i] - y);
-      if (d < min) { min = d; idx = i; }
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(calcOffsets);
+      sections.forEach(s => ro.observe(s));
     }
-    return idx;
-  };
+    window.addEventListener('load',  calcOffsets);
+    window.addEventListener('resize', calcOffsets);
 
-  // 스크롤 잠금(중복 입력 방지)
-  let locked = false;
-  const duration = 700; // ms: 이동 시간
-  const lock = () => { locked = true; setTimeout(() => locked = false, duration + 80); };
+    const nearestIndex = () => {
+      const y = window.scrollY;
+      let idx = 0, min = Infinity;
+      for (let i=0;i<offsets.length;i++){
+        const d = Math.abs(offsets[i]-y);
+        if (d < min) { min = d; idx = i; }
+      }
+      return idx;
+    };
 
-  // 가로 스와이퍼 영역에서는 수평 스크롤은 통과, 수직만 페이징
-  const isInsideHorizontalSwiper = (evtTarget) => {
-    return !!(evtTarget && (evtTarget.closest?.('.cons-swiper')));
-  };
+    let pagingLocked = false;
+    let lastStepAt = 0;     // 입력 디바운스 타임스탬프
+    const PAGING_DURATION = 900;   // 스냅 시간 가늠(부드러운 스크롤)
+    const DEBOUNCE_MS     = 420;   // 추가 입력 무시(연속 스킵 방지)
 
-  const scrollToIndex = (i) => {
-    i = Math.max(0, Math.min(sections.length - 1, i));
-    const top = offsets[i];
-    lock();
-    window.scrollTo({ top, behavior: 'smooth' });
-  };
+    const lockPaging = () => {
+      pagingLocked = true;
+      setTimeout(() => { pagingLocked = false; }, PAGING_DURATION);
+    };
 
-  // 휠
-  const onWheel = (e) => {
-    if (locked) { e.preventDefault(); return; }
+    const scrollToIndex = (i) => {
+      i = Math.max(0, Math.min(sections.length-1, i));
+      const top = offsets[i];
+      lockPaging();
+      window.scrollTo({ top, behavior:'smooth' });
+    };
 
-    // 스와이퍼 안에서 가로 휠(shift+wheel 등) → 통과
-    if (isInsideHorizontalSwiper(e.target) && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    // 스와이퍼 영역 안에 있는지
+    const inConsSwiper = (t) => !!(t && (t.closest?.('.cons-swiper')));
 
-    const delta = e.deltaY;
-    if (Math.abs(delta) < 10) return; // 미세 스크롤 무시
+    // 공통: 다음/이전 섹션으로 1스텝만 이동
+    const step = (dir/*1 or -1*/) => {
+      const now = performance.now();
+      if (pagingLocked) return;
+      if (now - lastStepAt < DEBOUNCE_MS) return;  // 연속 입력 억제
+      lastStepAt = now;
 
-    e.preventDefault(); // 기본 스크롤 막고
-    const cur = nearestIndex();
-    const next = (delta > 0) ? cur + 1 : cur - 1;
-    if (next !== cur) scrollToIndex(next);
-  };
+      const cur = nearestIndex();
+      const next = cur + (dir > 0 ? 1 : -1);
+      if (next !== cur) scrollToIndex(next);
+    };
 
-  // 터치(모바일 스와이프)
-  let touchStartY = null;
-  let touchStartX = null;
-  const onTouchStart = (e) => {
-    if (e.touches.length !== 1) return;
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
-  };
-  const onTouchEnd = (e) => {
-    if (touchStartY == null) return;
-    const t = e.changedTouches[0];
-    const dy = t.clientY - touchStartY;
-    const dx = t.clientX - touchStartX;
-    touchStartY = touchStartX = null;
-
-    // 스와이퍼 안에서 가로 스와이프는 통과
-    if (isInsideHorizontalSwiper(e.target) && Math.abs(dx) > Math.abs(dy)) return;
-    if (locked) return;
-
-    const threshold = 60; // 최소 스와이프 거리
-    if (Math.abs(dy) < threshold) return;
-
-    const cur = nearestIndex();
-    const next = (dy < 0) ? cur + 1 : cur - 1; // 위→아래 스와이프는 다음 섹션
-    if (next !== cur) {
+    // 휠
+    const onWheel = (e) => {
+      if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
+      if (inConsSwiper(e.target) && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      const dy = e.deltaY;
+      if (Math.abs(dy) < 10) return;
       e.preventDefault();
-      scrollToIndex(next);
-    }
-  };
+      step(dy > 0 ? 1 : -1);
+    };
 
-  // 키보드(상/하, PgUp/PgDn, Space)
-  const onKeyDown = (e) => {
-    if (locked) return;
-    const keysNext = ['ArrowDown', 'PageDown', 'Space'];
-    const keysPrev = ['ArrowUp', 'PageUp'];
-    if (![...keysNext, ...keysPrev].includes(e.code)) return;
+    // 터치
+    let touchStartY = null, touchStartX = null;
+    const onTouchStart = (e) => {
+      if (e.touches.length !== 1) return;
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+    };
+    const onTouchEnd = (e) => {
+      if (touchStartY == null) return;
+      const t = e.changedTouches[0];
+      const dy = t.clientY - touchStartY;
+      const dx = t.clientX - touchStartX;
+      touchStartY = touchStartX = null;
 
-    // 입력 폼(인풋/텍스트에어리아/셀렉트) 포커스 시 무시
-    const tag = (document.activeElement && document.activeElement.tagName) || '';
-    if (/(INPUT|TEXTAREA|SELECT)/.test(tag)) return;
+      if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
+      if (inConsSwiper(e.target) && Math.abs(dx) > Math.abs(dy)) return;
 
-    e.preventDefault();
-    const cur = nearestIndex();
-    const next = keysNext.includes(e.code) ? cur + 1 : cur - 1;
-    if (next !== cur) scrollToIndex(next);
-  };
+      const TH = 60;
+      if (Math.abs(dy) < TH) return;
+      step(dy < 0 ? 1 : -1); // 위→아래 스와이프는 다음 섹션
+    };
 
-  // 리스너 등록
-  window.addEventListener('wheel', onWheel, { passive: false });
-  window.addEventListener('touchstart', onTouchStart, { passive: true });
-  window.addEventListener('touchend', onTouchEnd, { passive: false });
-  window.addEventListener('keydown', onKeyDown);
+    // 키보드
+    const onKeyDown = (e) => {
+      if (pagingLocked) return;
+      const nextKeys = ['ArrowDown','PageDown','Space'];
+      const prevKeys = ['ArrowUp','PageUp'];
+      if (![...nextKeys,...prevKeys].includes(e.code)) return;
 
-  // 초기 위치가 어중간하면 가까운 섹션에 붙이기(옵션)
-  // scrollToIndex(nearestIndex());
+      const tag = (document.activeElement && document.activeElement.tagName) || '';
+      if (/(INPUT|TEXTAREA|SELECT)/.test(tag)) return;
+
+      e.preventDefault();
+      step(nextKeys.includes(e.code) ? 1 : -1);
+    };
+
+    window.addEventListener('wheel',      onWheel,     { passive:false });
+    window.addEventListener('touchstart', onTouchStart,{ passive:true  });
+    window.addEventListener('touchend',   onTouchEnd,  { passive:false });
+    window.addEventListener('keydown',    onKeyDown);
+  })();
 });
