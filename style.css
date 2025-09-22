@@ -15,6 +15,12 @@ html, body, ul, li, h1, h2, h3, h4, a, p, img {
 }
 
 /* 폰트 적용 */
+/* top-bar 폰트 */
+.top-t {
+  font-size: 26px;
+  font-weight: 500;
+  color: #fff;
+}
 /* sec01 폰트 */
 .title-tt {
   font-size: 60px;
@@ -149,12 +155,14 @@ html, body, ul, li, h1, h2, h3, h4, a, p, img {
   width: 13px;
   height: 13px;
 }
-body.use-custom-cursor,
-body.use-custom-cursor * {
-  cursor: none !important;
-}
 
+/* 커스텀 커서를 쓰는 영역에만 커서 숨김 */
+.cursor-scope, 
+.cursor-scope * { cursor: none !important; }
 
+.cursor-scope a,
+.cursor-scope button,
+.cursor-scope [role="button"] { cursor: pointer !important; }
 
 /* 커서 기본값: 반전 안 함 (mix-blend-mode 제거) */
 .custom-cursor{
@@ -179,6 +187,71 @@ body.use-custom-cursor * {
 }
 
 .custom-cursor.show{ opacity: 1; }
+.custom-cursor.hidden { opacity: 0 !important; }
+/* ------------------------------------------- top-bar start ------------------------------------------- */
+header {
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 130px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  border-bottom: 1px solid #ffffff4b;
+  transition: transform .28s ease, background-color .2s ease, border-color .2s ease;
+}
+
+
+/* ===== Header theme & visibility (minimal) ===== */
+
+/* 숨김 상태 */
+header.is-hidden { transform: translateY(-100%); }
+
+/* 강제 표시 (호버/위로 스크롤 시) */
+header.force-show { transform: translateY(0) !important; }
+
+/* 로고 전환 */
+.top-logo .logo-b { display: block; }
+.top-logo .logo-w { display: none; }
+header.logo-white .logo-b { display: none; }
+header.logo-white .logo-w { display: block; }
+
+/* 메뉴/보더 테마 */
+header.menu-dark .top-t { color: #000; }
+header.menu-dark { border-bottom-color: #E5E5E5; }
+
+/* 상단 100px 호버존 */
+.top-hover-zone {
+  position: fixed; inset: 0 0 auto 0; height: 100px;
+  z-index: 120; background: transparent; pointer-events: auto;
+  pointer-events: none;
+}
+
+.top-bar {
+  height: 100%;
+  margin: 0 140px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-logo {
+  width: 200px;
+  height: 36px;
+}
+
+.top-logo-img {
+  width: 199px;
+  height: 36px;
+}
+
+.top-menu {
+  display: flex;
+  gap: 100px;
+}
+/* ------------------------------------------- top-bar end ------------------------------------------- */
+
 /* ------------------------------------------- sec-1 start ------------------------------------------- */
 .sec-1 {
   position: relative;
@@ -456,7 +529,7 @@ body.use-custom-cursor * {
   flex-direction: column;
   align-items: center;
   gap: 22px;
-  margin-bottom: 76px;
+  margin-bottom: 100px;
 }
 .sec-5 .inquiry-box {
   position: relative;

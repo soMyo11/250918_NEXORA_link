@@ -1,3 +1,7 @@
+AOS.init({
+  once: true // ❗ 한 번만 실행
+});
+
 // ==============================
 // NEXORA - script.js (이슈 3건 반영 전면 교체본)
 // ==============================
@@ -138,22 +142,21 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
 
   // ─────────────────────────────────────
-  // 3) 섹션3 커스텀 커서 (사라짐/반전 문제 해결)
-  //    - 이미지 위에서 흰색 반전: .invert 클래스로 filter 토글
-  //    - mix-blend-mode 사용 안 함(일부 배경에서 안 보여 보이는 문제 방지)
+  // 3) 섹션3 커스텀 커서 (+ 헤더 위에선 숨김)
   // ─────────────────────────────────────
-  // 섹션3 커스텀 커서 부분만 수정/교체
   (function initCustomCursor(){
     const sec3   = document.querySelector('.sec-3');
     const cursor = document.querySelector('.custom-cursor');
-    if (!sec3 || !cursor) return;
+    const header = document.querySelector('header');
+    if (!sec3 || !cursor || !header) return;
 
     let x = -9999, y = -9999;
     let rafId = null, pending = false;
     let wasInside = false;
-    let rect = sec3.getBoundingClientRect();
+    let secRect = sec3.getBoundingClientRect();
 
-    const recalc = () => { rect = sec3.getBoundingClientRect(); };
+    const recalc = () => { secRect = sec3.getBoundingClientRect(); };
+
     const flush  = () => {
       rafId = null;
       if (!pending) return;
@@ -161,18 +164,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
       cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
 
-      const inside = (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
+      const elAt = document.elementFromPoint(x, y);
+      const overHeader = !!(elAt && elAt.closest && elAt.closest('header'));
+      if (overHeader) {
+        cursor.classList.add('hidden');
+        cursor.classList.remove('show','invert');
+        wasInside = false;      // 헤더에서 내려올 때 즉시 복구되도록 리셋
+        return;                 // 아래 로직 진행하지 않음
+      } else {
+        cursor.classList.remove('hidden'); // 헤더에서 벗어나면 다시 보이게
+      }
+
+      // sec-3 범위 안/밖 판정
+      const inside = (x >= secRect.left && x <= secRect.right && y >= secRect.top && y <= secRect.bottom);
       if (inside !== wasInside) {
         wasInside = inside;
         if (inside) {
           cursor.classList.add('show');
-          document.body.classList.add('use-custom-cursor');   // ✅ 전역 숨김 ON
         } else {
           cursor.classList.remove('show','invert');
-          document.body.classList.remove('use-custom-cursor'); // ✅ 전역 숨김 OFF
         }
       }
     };
+
     const schedule = () => { if (!rafId) rafId = requestAnimationFrame(flush); };
 
     document.addEventListener('pointermove', (e) => {
@@ -188,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', recalc, { passive:true });
     window.addEventListener('scroll',  recalc, { passive:true });
   })();
-
   // ─────────────────────────────────────
   // 4) 섹션 페이징 스크롤 (휠/터치/키보드)
   //    - 드래그 중에는 페이징 비활성화
@@ -303,3 +316,110 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown',    onKeyDown);
   })();
 });
+
+// ==============================
+// Header theme & show/hide (conflict-free)
+// ==============================
+(function initHeaderMinimal(){
+  const header = document.querySelector('header');
+  if (!header) return;
+
+  // 1) 뷰포트 중앙에 걸린 섹션을 찾아서 인덱스 반환
+  const getCurrentSectionIndex = () => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const el = document.elementFromPoint(centerX, centerY);
+    const sec = el && el.closest ? el.closest('.sec') : null;
+    if (!sec) return 0;
+    const list = Array.from(document.querySelectorAll('.sec'));
+    const idx = list.indexOf(sec);
+    return Math.max(0, idx);
+  };
+
+  // 2) 섹션 테마 규칙
+  // - 섹션 2,4: 로고 흰색
+  // - 섹션 3,4: 메뉴 글자 검정 + 보더 연회색
+  const applyThemeForSection = (idx) => {
+    // 초기화
+    header.classList.remove('logo-white', 'menu-dark');
+
+    // 로고 흰색: 1,3
+    if (idx === 1 || idx === 3) header.classList.add('logo-white');
+
+    // 메뉴/보더 다크: 2,4
+    if (idx === 2 || idx === 4) header.classList.add('menu-dark');
+  };
+
+  // 3) 스크롤 방향에 따라 헤더 숨김/표시
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  const updateOnScroll = () => {
+    ticking = false;
+
+    const y = window.scrollY;
+    const goingDown = y > lastY + 2;
+    const goingUp   = y < lastY - 2;
+
+    const curIdx = getCurrentSectionIndex();
+
+    // 섹션 테마 갱신
+    applyThemeForSection(curIdx);
+
+    // “처음(섹션1) 빼고” 아래로 스크롤 시 숨김, 위로 스크롤 시 표시
+    if (curIdx > 0) {
+      if (goingDown) header.classList.add('is-hidden');
+      else if (goingUp) header.classList.remove('is-hidden');
+    } else {
+      header.classList.remove('is-hidden');
+    }
+
+    lastY = y;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateOnScroll);
+      ticking = true;
+    }
+  }, { passive:true });
+
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(() => applyThemeForSection(getCurrentSectionIndex()));
+  }, { passive:true });
+
+  // 4) 상단 100px 호버 시 강제 표시
+  const hoverZone = document.createElement('div');
+  hoverZone.className = 'top-hover-zone';
+  document.body.appendChild(hoverZone);
+
+  // 상단 100px 안에 마우스가 들어오면 헤더 강제 표시
+(function attachHeaderHoverByMouseY(){
+  const header = document.querySelector('header');
+  if (!header) return;
+
+  let forced = false;
+  window.addEventListener('mousemove', (e) => {
+    if (e.clientY <= 100) {
+      if (!forced) {
+        forced = true;
+        header.classList.add('force-show');
+        header.classList.remove('is-hidden');
+      }
+    } else if (forced) {
+      forced = false;
+      header.classList.remove('force-show');
+      // 섹션1이 아니고 스크롤 내려와 있으면 다시 숨김 유지
+      const centerEl = document.elementFromPoint(innerWidth/2, innerHeight/2);
+      const curSec = centerEl && centerEl.closest('.sec');
+      const list = Array.from(document.querySelectorAll('.sec'));
+      const idx = Math.max(0, list.indexOf(curSec));
+      if (idx > 0 && window.scrollY > 0) header.classList.add('is-hidden');
+    }
+  }, { passive:true });
+})();
+
+  
+  // 첫 로드 테마 1회 적용
+  applyThemeForSection(getCurrentSectionIndex());
+})();

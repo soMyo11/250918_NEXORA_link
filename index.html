@@ -12,17 +12,40 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+  <!-- aos -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
   <!-- css, js 연결 -->
   <link rel="stylesheet" href="./style.css">
+  
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
   <script src="./script.js" defer></script>
 </head>
 <body>
+
+  <header>
+    <div class="top-bar">
+      <div class="top-logo">
+        <img class="top-logo-img logo-b" src="./img/logo.png" alt="넥소라 로고">
+        <img class="top-logo-img logo-w" src="./img/logo-w.png" alt="넥소라 로고-w">
+      </div>
+      <ul class="top-menu">
+        <li class="top-list"><a class="top-t" href="#">회사 소개</a></li>
+        <li class="top-list"><a class="top-t" href="#">컨설팅</a></li>
+        <li class="top-list"><a class="top-t" href="#">사례</a></li>
+        <li class="top-list"><a class="top-t" href="#">문의하기</a></li>
+      </ul>
+      <div class="flex-grow"></div>
+    </div>
+  </header>
+
+
   <section class="sec sec-1">
     <div class="bg"></div>
-    <div class="title">
+    <div class="title" data-aos="fade-up" data-aos-duration="1500">
       <h2 class="title-tt">한국 중소기업 성장의 원팀, 넥소라입니다.</h2>
       <p class="title-st">
         조달부터 자금, 인증, 경영, 사옥이전까지<br>
@@ -63,8 +86,8 @@
 
   <div class="custom-cursor"></div>
 
-  <section class="sec sec-3">
-    <div class="con">
+  <section class="sec sec-3 cursor-scope">
+    <div class="con" data-aos="fade-up" data-aos-duration="1500">
       <div class="cons-title">
         <h3 class="cons-t-tt">대표 컨설팅 서비스</h3>
         <p class="cons-t-st">중소기업이 성장하는 데 필요한 핵심 영역을 전문가와 함께 해결하세요.</p>
@@ -143,7 +166,7 @@
   </section>
 
   <section class="sec sec-4">
-    <div class="review">
+    <div class="review" data-aos="fade-up" data-aos-duration="1500">
       <div class="review-box">
         <div class="review-title">
           <h3 class="review-tt">넥소라와 함께한<br>기업들의 사례</h3>
@@ -237,7 +260,7 @@
   </section>
 
   <section class="sec sec-5">
-    <div class="con">
+    <div class="con" data-aos="fade-up" data-aos-duration="1500">
       <div class="inquiry">
         <div class="inquiry-title">
           <h3 class="inq-tt">성장에 필요한 모든 연결</h3>
