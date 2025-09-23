@@ -1,5 +1,5 @@
 AOS.init({
-  once: true // ❗ 한 번만 실행
+    once: true // ❗ 한 번만 실행
 });
 
 // ==============================
@@ -7,97 +7,122 @@ AOS.init({
 // ==============================
 
 document.addEventListener('DOMContentLoaded', () => {
-  const $  = (s, c=document) => c.querySelector(s);
-  const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
+    const $  = (s, c=document) => c.querySelector(s);
+    const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 
 // ─────────────────────────────────────
-// SECTION 2 (ScrollTrigger)
+// SECTION 1 (ScrollTrigger)
 // ─────────────────────────────────────
-(function initSection2_ST(){
-  if (!window.gsap || !window.ScrollTrigger) return;
-  gsap.registerPlugin(ScrollTrigger);
+    (function initSection1_ST(){
+    if (!window.gsap || !window.ScrollTrigger) return;
+    gsap.registerPlugin(ScrollTrigger);
 
-  const sec2    = document.querySelector('#sec-2');
-  const line    = document.querySelector('.center-line');
-  const reveal  = document.querySelector('.video-reveal');
-  const videoEl = document.querySelector('.hero-video');
-  if (!sec2 || !line || !reveal || !videoEl) return;
+    const sec1    = document.querySelector('#sec-1');
+    const line    = document.querySelector('.center-line');
+    const reveal  = document.querySelector('.video-reveal');
+    const videoEl = document.querySelector('.hero-video');
+    if (!sec1 || !line || !reveal || !videoEl) return;
 
-  // 초기 세팅
-  gsap.set(line,   { visibility:'hidden', opacity:0, scaleY:0, transformOrigin:'top center' });
-  gsap.set(reveal, { opacity:1, '--gap':'50%' });
+    gsap.set(line,   { visibility:'hidden', opacity:0, scaleY:0, transformOrigin:'top center' });
+    gsap.set(reveal, { opacity:1, '--gap':'50%' });
 
-  const tl = gsap.timeline({ paused:true, defaults:{ immediateRender:false } });
+    const tl = gsap.timeline({ paused:true, defaults:{ immediateRender:false } });
 
-  tl
-    // 라인: 위에서 아래로만 쭉 확장
-    .set(line, { visibility:'visible', opacity:1 })
-    .to(line, { scaleY:1, duration:1.2, ease:'power3.out' }, 0)
+    tl
+        .set(line, { visibility:'visible', opacity:1 })
+        .to(line,  { scaleY:1, duration:1.2, ease:'power3.out' }, 0)
+        .addLabel('reveal')
+        .set(line, { opacity:0, visibility:'hidden' }, 'reveal')
+        .to(reveal, { '--gap':'0%', duration:1.0, ease:'power3.inOut' }, 'reveal')
 
-    // 비디오 reveal 시작과 동시에 라인 즉시 제거
-    .addLabel('reveal')
-    .set(line, { opacity:0, visibility:'hidden' }, 'reveal')
-    .to(reveal, { '--gap':'0%', duration:1.0, ease:'power3.inOut' }, 'reveal');
+         // ★ 헤더 노출 콜백 추가 (여기!)
+        .call(() => {
+            const header = document.querySelector('header');
+            if (!header) return;
 
-  let revealedOnce = false;
+            // 1) 강제 노출
+            header.classList.remove('is-hidden');
+            header.classList.add('force-show');
 
-  const playVideoSmooth = () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => { videoEl.play().catch(()=>{}); });
-    });
-  };
+            // 2) 섹션1 자동숨김 잠깐 끄기
+            window.__sec1HeaderAutoHide = false;
 
-  ScrollTrigger.create({
-    trigger: sec2,
-    start: 'top 75%',
-    end: 'bottom top',
-    onEnter: () => {
-      if (!revealedOnce) {
-        if (videoEl.readyState >= 2) { tl.play(0); revealedOnce = true; }
-        else {
-          const onReady = () => { tl.play(0); revealedOnce = true; videoEl.removeEventListener('canplay', onReady); };
-          videoEl.addEventListener('canplay', onReady, { once:true });
+            // 3) 인트로 끝난 뒤 원복
+            setTimeout(() => {
+            header.classList.remove('force-show');
+            window.__sec1HeaderAutoHide = true;
+            }, 2600); // 텍스트/라인 애니 끝난 뒤 타이밍
+        }, [], 'reveal+=1.18')
+
+        // 순서: 첫 문장 → 라인 → 두 번째 문장
+        .call(() => { document.querySelector('.vt-1')?.classList.add('is-show'); }, [], 'reveal+=1.2')
+        .call(() => { document.querySelector('.v-line-wrap')?.classList.add('is-drawing'); }, [], 'reveal+=1.8')
+        .call(() => { document.querySelector('.vt-2')?.classList.add('is-show'); }, [], 'reveal+=3.0');
+
+    // ★ 누락됐던 부분: 변수와 함수 정의
+    let revealedOnce = false;
+    const playVideoSmooth = () => {
+        requestAnimationFrame(() => {
+        requestAnimationFrame(() => { videoEl.play().catch(()=>{}); });
+        });
+    };
+
+    ScrollTrigger.create({
+        trigger: sec1,
+        start: 'top bottom',   // 섹션 상단이 뷰포트 하단에 닿으면 활성화
+        end:   'bottom top',   // 섹션 하단이 뷰포트 상단을 지나면 비활성화
+        onToggle: (self) => {
+            if (self.isActive) {
+            // 섹션1이 화면 안에 있을 때
+            if (!revealedOnce) {
+                if (videoEl.readyState >= 2) { tl.play(0); revealedOnce = true; }
+                else {
+                const onReady = () => { tl.play(0); revealedOnce = true; videoEl.removeEventListener('canplay', onReady); };
+                videoEl.addEventListener('canplay', onReady, { once:true });
+                }
+            }
+            // 비디오 재생 (2프레임 뒤에 호출해 재생 실패 방지)
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => { videoEl.play().catch(()=>{}); });
+            });
+            } else {
+            // 섹션1이 화면을 벗어났을 때만 일시정지
+            try { videoEl.pause(); } catch(_) {}
+            }
         }
-      }
-      playVideoSmooth();
-    },
-    onEnterBack: () => playVideoSmooth(),
-    onLeave:     () => { try { videoEl.pause(); } catch(_){} },
-    onLeaveBack: () => { try { videoEl.pause(); } catch(_){} }
-  });
-})();
+        });
+    })();
 
 
 
+    // ─────────────────────────────────────
+    // 2) Swiper (섹션3/섹션4) + 드래그 중 페이징 잠금
+    // ─────────────────────────────────────
+    let isDraggingSwiper = false;     // ★ 섹션 페이징과 충돌 방지용 플래그
+    let dragReleaseTimer = null;
 
-  // ─────────────────────────────────────
-  // 2) Swiper (섹션3/섹션4) + 드래그 중 페이징 잠금
-  // ─────────────────────────────────────
-  let isDraggingSwiper = false;     // ★ 섹션 페이징과 충돌 방지용 플래그
-  let dragReleaseTimer = null;
-
-  const setDragging = (v) => {
+    const setDragging = (v) => {
     isDraggingSwiper = v;
     if (dragReleaseTimer) { clearTimeout(dragReleaseTimer); dragReleaseTimer = null; }
     if (!v) {
-      // 드래그 종료 후 잠깐 더 유예 (남은 휠/관성 입력 무시)
-      dragReleaseTimer = setTimeout(() => { isDraggingSwiper = false; }, 180);
+        // 드래그 종료 후 잠깐 더 유예 (남은 휠/관성 입력 무시)
+        dragReleaseTimer = setTimeout(() => { isDraggingSwiper = false; }, 180);
     }
-  };
+    };
 
-  (function initSwipers(){
+    (function initSwipers(){
     // 섹션3
     const consSwiper = new Swiper('.cons-swiper', {
-      slidesPerView: 'auto',
-      spaceBetween: 105,
-      centeredSlides: false,
-      watchOverflow: true,
-      simulateTouch: true,
-      threshold: 6,
-      touchRatio: 1,
-      freeMode: { enabled:true, momentum:true, momentumBounce:false, momentumVelocityRatio:0.9 },
-      grabCursor: true,
-      mousewheel: {
+        slidesPerView: 'auto',
+        spaceBetween: 105,
+        centeredSlides: false,
+        watchOverflow: true,
+        simulateTouch: true,
+        threshold: 6,
+        touchRatio: 1,
+        freeMode: { enabled:true, momentum:true, momentumBounce:false, momentumVelocityRatio:0.9 },
+        grabCursor: true,
+        mousewheel: {
         enabled: true,
         forceToAxis: true,
         releaseOnEdges: true,
@@ -105,24 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
         thresholdDelta: 12,
         thresholdTime: 40,
         eventsTarget: '.cons-swiper'
-      },
-      preventClicks: true,
-      preventClicksPropagation: true,
-      passiveListeners: true,
-      updateOnWindowResize: true,
-      on: {
+        },
+        preventClicks: true,
+        preventClicksPropagation: true,
+        passiveListeners: true,
+        updateOnWindowResize: true,
+        on: {
         touchStart(){ setDragging(true); },
         sliderFirstMove(){ setDragging(true); },
         touchEnd(){ setDragging(false); },
         transitionEnd(){ /* no-op */ },
-      },
-      breakpoints: {
+        },
+        breakpoints: {
         1440:{ spaceBetween: 90 },
         1280:{ spaceBetween: 72 },
         1024:{ spaceBetween: 56 },
         768: { spaceBetween: 32 },
         480: { spaceBetween: 24 }
-      }
+        }
     });
 
     // 성능 힌트(이미지/카드에 will-change 부여)
@@ -130,21 +155,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 섹션4
     new Swiper('.sec-4 .review-menu', {
-      direction: 'horizontal',
-      slidesPerView: 'auto',
-      spaceBetween: 20,
-      loop: false,
-      navigation: { nextEl: '.rv-nav-topright .rv-next', prevEl: '.rv-nav-topright .rv-prev' },
-      grabCursor: true,
-      preventClicks: true,
-      preventClicksPropagation: true,
+        direction: 'horizontal',
+        slidesPerView: 'auto',
+        spaceBetween: 20,
+        loop: false,
+        navigation: { nextEl: '.rv-nav-topright .rv-next', prevEl: '.rv-nav-topright .rv-prev' },
+        grabCursor: true,
+        preventClicks: true,
+        preventClicksPropagation: true,
     });
-  })();
+    })();
 
-  // ─────────────────────────────────────
-  // 3) 섹션3 커스텀 커서 (+ 헤더 위에선 숨김)
-  // ─────────────────────────────────────
-  (function initCustomCursor(){
+    // ─────────────────────────────────────
+    // 3) 섹션3 커스텀 커서 (+ 헤더 위에선 숨김)
+    // ─────────────────────────────────────
+    (function initCustomCursor(){
     const sec3   = document.querySelector('.sec-3');
     const cursor = document.querySelector('.custom-cursor');
     const header = document.querySelector('header');
@@ -158,56 +183,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const recalc = () => { secRect = sec3.getBoundingClientRect(); };
 
     const flush  = () => {
-      rafId = null;
-      if (!pending) return;
-      pending = false;
+        rafId = null;
+        if (!pending) return;
+        pending = false;
 
-      cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
 
-      const elAt = document.elementFromPoint(x, y);
-      const overHeader = !!(elAt && elAt.closest && elAt.closest('header'));
-      if (overHeader) {
+        const elAt = document.elementFromPoint(x, y);
+        const overHeader = !!(elAt && elAt.closest && elAt.closest('header'));
+        if (overHeader) {
         cursor.classList.add('hidden');
         cursor.classList.remove('show','invert');
         wasInside = false;      // 헤더에서 내려올 때 즉시 복구되도록 리셋
         return;                 // 아래 로직 진행하지 않음
-      } else {
+        } else {
         cursor.classList.remove('hidden'); // 헤더에서 벗어나면 다시 보이게
-      }
+        }
 
-      // sec-3 범위 안/밖 판정
-      const inside = (x >= secRect.left && x <= secRect.right && y >= secRect.top && y <= secRect.bottom);
-      if (inside !== wasInside) {
+        // sec-3 범위 안/밖 판정
+        const inside = (x >= secRect.left && x <= secRect.right && y >= secRect.top && y <= secRect.bottom);
+        if (inside !== wasInside) {
         wasInside = inside;
         if (inside) {
-          cursor.classList.add('show');
+            cursor.classList.add('show');
         } else {
-          cursor.classList.remove('show','invert');
+            cursor.classList.remove('show','invert');
         }
-      }
+        }
     };
 
     const schedule = () => { if (!rafId) rafId = requestAnimationFrame(flush); };
 
     document.addEventListener('pointermove', (e) => {
-      x = e.clientX; y = e.clientY; pending = true; schedule();
+        x = e.clientX; y = e.clientY; pending = true; schedule();
     }, { passive:true });
 
     // 이미지 위에서만 반전
     document.querySelectorAll('.sec-3 .cons-img-box').forEach(box => {
-      box.addEventListener('pointerenter', () => cursor.classList.add('invert'));
-      box.addEventListener('pointerleave', () => cursor.classList.remove('invert'));
+        box.addEventListener('pointerenter', () => cursor.classList.add('invert'));
+        box.addEventListener('pointerleave', () => cursor.classList.remove('invert'));
     });
 
     window.addEventListener('resize', recalc, { passive:true });
     window.addEventListener('scroll',  recalc, { passive:true });
-  })();
-  // ─────────────────────────────────────
-  // 4) 섹션 페이징 스크롤 (휠/터치/키보드)
-  //    - 드래그 중에는 페이징 비활성화
-  //    - 휠/터치 입력 1회당 정확히 1스텝만 이동(푸터→위로 갈 때 섹션5 건너뛰는 현상 방지)
-  // ─────────────────────────────────────
-  (function initSectionPaging(){
+    })();
+    // ─────────────────────────────────────
+    // 4) 섹션 페이징 스크롤 (휠/터치/키보드)
+    //    - 드래그 중에는 페이징 비활성화
+    //    - 휠/터치 입력 1회당 정확히 1스텝만 이동(푸터→위로 갈 때 섹션5 건너뛰는 현상 방지)
+    // ─────────────────────────────────────
+    (function initSectionPaging(){
     const sections = $$('.sec');
     if (!sections.length) return;
 
@@ -216,20 +241,20 @@ document.addEventListener('DOMContentLoaded', () => {
     calcOffsets();
 
     if ('ResizeObserver' in window) {
-      const ro = new ResizeObserver(calcOffsets);
-      sections.forEach(s => ro.observe(s));
+        const ro = new ResizeObserver(calcOffsets);
+        sections.forEach(s => ro.observe(s));
     }
     window.addEventListener('load',  calcOffsets);
     window.addEventListener('resize', calcOffsets);
 
     const nearestIndex = () => {
-      const y = window.scrollY;
-      let idx = 0, min = Infinity;
-      for (let i=0;i<offsets.length;i++){
+        const y = window.scrollY;
+        let idx = 0, min = Infinity;
+        for (let i=0;i<offsets.length;i++){
         const d = Math.abs(offsets[i]-y);
         if (d < min) { min = d; idx = i; }
-      }
-      return idx;
+        }
+        return idx;
     };
 
     let pagingLocked = false;
@@ -238,15 +263,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const DEBOUNCE_MS     = 420;   // 추가 입력 무시(연속 스킵 방지)
 
     const lockPaging = () => {
-      pagingLocked = true;
-      setTimeout(() => { pagingLocked = false; }, PAGING_DURATION);
+        pagingLocked = true;
+        setTimeout(() => { pagingLocked = false; }, PAGING_DURATION);
     };
 
     const scrollToIndex = (i) => {
-      i = Math.max(0, Math.min(sections.length-1, i));
-      const top = offsets[i];
-      lockPaging();
-      window.scrollTo({ top, behavior:'smooth' });
+        i = Math.max(0, Math.min(sections.length-1, i));
+        const top = offsets[i];
+        lockPaging();
+        window.scrollTo({ top, behavior:'smooth' });
     };
 
     // 스와이퍼 영역 안에 있는지
@@ -254,78 +279,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 공통: 다음/이전 섹션으로 1스텝만 이동
     const step = (dir/*1 or -1*/) => {
-      const now = performance.now();
-      if (pagingLocked) return;
-      if (now - lastStepAt < DEBOUNCE_MS) return;  // 연속 입력 억제
-      lastStepAt = now;
+        const now = performance.now();
+        if (pagingLocked) return;
+        if (now - lastStepAt < DEBOUNCE_MS) return;  // 연속 입력 억제
+        lastStepAt = now;
 
-      const cur = nearestIndex();
-      const next = cur + (dir > 0 ? 1 : -1);
-      if (next !== cur) scrollToIndex(next);
+        const cur = nearestIndex();
+        const next = cur + (dir > 0 ? 1 : -1);
+        if (next !== cur) scrollToIndex(next);
     };
 
     // 휠
     const onWheel = (e) => {
-      if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
-      if (inConsSwiper(e.target) && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-      const dy = e.deltaY;
-      if (Math.abs(dy) < 10) return;
-      e.preventDefault();
-      step(dy > 0 ? 1 : -1);
+        if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
+        if (inConsSwiper(e.target) && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+        const dy = e.deltaY;
+        if (Math.abs(dy) < 10) return;
+        e.preventDefault();
+        step(dy > 0 ? 1 : -1);
     };
 
     // 터치
     let touchStartY = null, touchStartX = null;
     const onTouchStart = (e) => {
-      if (e.touches.length !== 1) return;
-      touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
+        if (e.touches.length !== 1) return;
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
     };
     const onTouchEnd = (e) => {
-      if (touchStartY == null) return;
-      const t = e.changedTouches[0];
-      const dy = t.clientY - touchStartY;
-      const dx = t.clientX - touchStartX;
-      touchStartY = touchStartX = null;
+        if (touchStartY == null) return;
+        const t = e.changedTouches[0];
+        const dy = t.clientY - touchStartY;
+        const dx = t.clientX - touchStartX;
+        touchStartY = touchStartX = null;
 
-      if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
-      if (inConsSwiper(e.target) && Math.abs(dx) > Math.abs(dy)) return;
+        if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
+        if (inConsSwiper(e.target) && Math.abs(dx) > Math.abs(dy)) return;
 
-      const TH = 60;
-      if (Math.abs(dy) < TH) return;
-      step(dy < 0 ? 1 : -1); // 위→아래 스와이프는 다음 섹션
+        const TH = 60;
+        if (Math.abs(dy) < TH) return;
+        step(dy < 0 ? 1 : -1); // 위→아래 스와이프는 다음 섹션
     };
 
     // 키보드
     const onKeyDown = (e) => {
-      if (pagingLocked) return;
-      const nextKeys = ['ArrowDown','PageDown','Space'];
-      const prevKeys = ['ArrowUp','PageUp'];
-      if (![...nextKeys,...prevKeys].includes(e.code)) return;
+        if (pagingLocked) return;
+        const nextKeys = ['ArrowDown','PageDown','Space'];
+        const prevKeys = ['ArrowUp','PageUp'];
+        if (![...nextKeys,...prevKeys].includes(e.code)) return;
 
-      const tag = (document.activeElement && document.activeElement.tagName) || '';
-      if (/(INPUT|TEXTAREA|SELECT)/.test(tag)) return;
+        const tag = (document.activeElement && document.activeElement.tagName) || '';
+        if (/(INPUT|TEXTAREA|SELECT)/.test(tag)) return;
 
-      e.preventDefault();
-      step(nextKeys.includes(e.code) ? 1 : -1);
+        e.preventDefault();
+        step(nextKeys.includes(e.code) ? 1 : -1);
     };
 
     window.addEventListener('wheel',      onWheel,     { passive:false });
     window.addEventListener('touchstart', onTouchStart,{ passive:true  });
     window.addEventListener('touchend',   onTouchEnd,  { passive:false });
     window.addEventListener('keydown',    onKeyDown);
-  })();
+    })();
 });
 
 // ==============================
 // Header theme & show/hide (conflict-free)
 // ==============================
 (function initHeaderMinimal(){
-  const header = document.querySelector('header');
-  if (!header) return;
+    const header = document.querySelector('header');
+    if (!header) return;
+     // 초기엔 숨겨두고(스크롤/호버/리빌이 보여줌)
+    header.classList.add('is-hidden');
 
-  // 1) 뷰포트 중앙에 걸린 섹션을 찾아서 인덱스 반환
-  const getCurrentSectionIndex = () => {
+     // 1섹션에서도 자동 숨김을 허용하는 플래그
+     // (호버존에서 빠져나오면 사라지길 원하므로 기본 true)
+    window.__sec1HeaderAutoHide = true;
+
+    // 1) 뷰포트 중앙에 걸린 섹션을 찾아서 인덱스 반환
+    const getCurrentSectionIndex = () => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     const el = document.elementFromPoint(centerX, centerY);
@@ -334,12 +365,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = Array.from(document.querySelectorAll('.sec'));
     const idx = list.indexOf(sec);
     return Math.max(0, idx);
-  };
+    };
 
-  // 2) 섹션 테마 규칙
-  // - 섹션 2,4: 로고 흰색
-  // - 섹션 3,4: 메뉴 글자 검정 + 보더 연회색
-  const applyThemeForSection = (idx) => {
+    // 2) 섹션 테마 규칙
+    // - 섹션 2,4: 로고 흰색
+    // - 섹션 3,4: 메뉴 글자 검정 + 보더 연회색
+    const applyThemeForSection = (idx) => {
     // 초기화
     header.classList.remove('logo-white', 'menu-dark');
 
@@ -348,13 +379,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 메뉴/보더 다크: 2,4
     if (idx === 2 || idx === 4) header.classList.add('menu-dark');
-  };
+    };
 
-  // 3) 스크롤 방향에 따라 헤더 숨김/표시
-  let lastY = window.scrollY;
-  let ticking = false;
+    // 3) 스크롤 방향에 따라 헤더 숨김/표시
+    let lastY = window.scrollY;
+    let ticking = false;
 
-  const updateOnScroll = () => {
+    const updateOnScroll = () => {
     ticking = false;
 
     const y = window.scrollY;
@@ -366,60 +397,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // 섹션 테마 갱신
     applyThemeForSection(curIdx);
 
-    // “처음(섹션1) 빼고” 아래로 스크롤 시 숨김, 위로 스크롤 시 표시
-    if (curIdx > 0) {
-      if (goingDown) header.classList.add('is-hidden');
-      else if (goingUp) header.classList.remove('is-hidden');
+    // 요구사항: 섹션1이라도 호버존에서 내려왔으면 사라지도록 허용
+    if (curIdx > 0 || window.__sec1HeaderAutoHide) {
+        if (goingDown) header.classList.add('is-hidden');
+        else if (goingUp) header.classList.remove('is-hidden');
     } else {
-      header.classList.remove('is-hidden');
+        header.classList.remove('is-hidden');
     }
 
     lastY = y;
-  };
+    };
 
-  window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', () => {
     if (!ticking) {
-      requestAnimationFrame(updateOnScroll);
-      ticking = true;
+        requestAnimationFrame(updateOnScroll);
+        ticking = true;
     }
-  }, { passive:true });
+    }, { passive:true });
 
-  window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
     requestAnimationFrame(() => applyThemeForSection(getCurrentSectionIndex()));
-  }, { passive:true });
+    }, { passive:true });
 
-  // 4) 상단 100px 호버 시 강제 표시
-  const hoverZone = document.createElement('div');
-  hoverZone.className = 'top-hover-zone';
-  document.body.appendChild(hoverZone);
+    // 4) 상단 100px 호버 시 강제 표시
+    const hoverZone = document.createElement('div');
+    hoverZone.className = 'top-hover-zone';
+    document.body.appendChild(hoverZone);
 
-  // 상단 100px 안에 마우스가 들어오면 헤더 강제 표시
+    // 상단 100px 안에 마우스가 들어오면 헤더 강제 표시
 (function attachHeaderHoverByMouseY(){
-  const header = document.querySelector('header');
-  if (!header) return;
+    const header = document.querySelector('header');
+    if (!header) return;
 
-  let forced = false;
-  window.addEventListener('mousemove', (e) => {
+    let forced = false;
+    window.addEventListener('mousemove', (e) => {
     if (e.clientY <= 100) {
-      if (!forced) {
+        if (!forced) {
         forced = true;
         header.classList.add('force-show');
         header.classList.remove('is-hidden');
-      }
+        }
     } else if (forced) {
-      forced = false;
-      header.classList.remove('force-show');
-      // 섹션1이 아니고 스크롤 내려와 있으면 다시 숨김 유지
-      const centerEl = document.elementFromPoint(innerWidth/2, innerHeight/2);
-      const curSec = centerEl && centerEl.closest('.sec');
-      const list = Array.from(document.querySelectorAll('.sec'));
-      const idx = Math.max(0, list.indexOf(curSec));
-      if (idx > 0 && window.scrollY > 0) header.classList.add('is-hidden');
+        forced = false;
+        header.classList.remove('force-show');
+
+        const centerEl = document.elementFromPoint(innerWidth/2, innerHeight/2);
+        const curSec = centerEl && centerEl.closest('.sec');
+        const list = Array.from(document.querySelectorAll('.sec'));
+        const idx = Math.max(0, list.indexOf(curSec));
+
+        // 요구사항: 1섹션이어도 호버존에서 내려오면 숨김
+        if ((idx > 0 && window.scrollY > 0) || (idx === 0 && window.__sec1HeaderAutoHide)) {
+            header.classList.add('is-hidden');
+        }
     }
-  }, { passive:true });
+    }, { passive:true });
 })();
 
-  
-  // 첫 로드 테마 1회 적용
-  applyThemeForSection(getCurrentSectionIndex());
+    
+    // 첫 로드 테마 1회 적용
+    applyThemeForSection(getCurrentSectionIndex());
 })();

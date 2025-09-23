@@ -2,158 +2,161 @@
 html, body { font-family: 'Pretendard Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif; }
 
 html, body { height: auto; scroll-behavior: auto; } /* 우리 코드가 스크롤을 제어함 */
+html, body { overflow-x: hidden; }
 
 
 /* 노말라이즈 */
 html, body, ul, li, h1, h2, h3, h4, a, p, img {
-  margin: 0;
-  padding: 0;
-  color:inherit;
-  list-style: none;
-  text-decoration: none;
-  font-weight: inherit;
+    margin: 0;
+    padding: 0;
+    color:inherit;
+    list-style: none;
+    text-decoration: none;
+    font-weight: inherit;
 }
 
 /* 폰트 적용 */
 /* top-bar 폰트 */
 .top-t {
-  font-size: 26px;
-  font-weight: 500;
-  color: #fff;
+    font-size: 26px;
+    font-weight: 500;
+    color: #fff;
 }
 /* sec01 폰트 */
 .title-tt {
-  font-size: 60px;
-  font-weight: 700;
+    font-size: 60px;
+    font-weight: 700;
 }
 .title-st {
-  font-size: 40px;
-  font-weight: 400;
-  line-height: 64px;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 64px;
 }
 /* sec02 폰트 */
 .video-tt {
-  font-size: 40px;
-  font-weight: 500;
-  line-height: 80px;
-  letter-spacing: 0.02em;
-  text-align: center;
-  white-space: nowrap;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 80px;
+    letter-spacing: 0.02em;
+    text-align: center;
+    white-space: nowrap;
 }
 .video-tt > strong {
-  font-size: 42px;
-  font-weight: 700;
+    font-size: 42px;
+    font-weight: 700;
 }
 /* sec03 폰트 */
 .cons-t-tt {
-  font-size: 48px;
-  letter-spacing: -0.015em;
-  font-weight: 700;
+    font-size: 48px;
+    letter-spacing: -0.015em;
+    font-weight: 700;
 }
 .cons-t-st{
-  font-size: 24px;
-  letter-spacing: -0.02em;
-  font-weight: 500;
-  color: #616161;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    color: #616161;
 }
 .cons-tt {
-  font-size: 30px;
-  letter-spacing: -0.01em;
-  font-weight: 700;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    font-weight: 700;
 }
 .cons-st {
-  font-size: 18px;
-  line-height: 24px;
-  font-weight: 600;
-  color: #737373;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 600;
+    color: #737373;
 }
 /* sec04 폰트 */
 .review-tt {
-  font-size: 46px;
-  font-weight: 700;
-  line-height: 76px;
-  letter-spacing: -0.035em;
-  color: #fff;
-  white-space: nowrap;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 76px;
+    letter-spacing: -0.035em;
+    color: #fff;
+    white-space: nowrap;
 }
 .review-st {
-  font-size: 24px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: #fff;
-  white-space: nowrap;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #fff;
+    white-space: nowrap;
 }
 .r-l-tt {
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 45px;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 45px;
+    margin-bottom: 26px;
 }
 .r-l-st {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 25.6px;
-  letter-spacing: -0.011em;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 25.6px;
+    letter-spacing: -0.011em;
+    height: 128px;
 }
 .r-l-day {
-  font-size: 16px;
-  line-height: 25.6px;
-  letter-spacing: -0.04em;
+    font-size: 16px;
+    line-height: 25.6px;
+    letter-spacing: -0.04em;
 }
 /* sec05 폰트 */
 .inq-tt {
-  font-size: 46px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
 }
 .inq-st {
-  font-size: 24px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: #616161;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #616161;
 }
 .inq-l-tt {
-  font-size: 36px;
-  font-weight: 600;
+    font-size: 36px;
+    font-weight: 600;
 }
 .inq-l-st {
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 38.4px;
-  letter-spacing: 0.02em;
-  text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 38.4px;
+    letter-spacing: 0.02em;
+    text-align: center;
 }
 /* footer 폰트 */
 .infor-tt {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 25.6px;
-  color: #7C7C7C;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 25.6px;
+    color: #7C7C7C;
 }
 .about-t {
-  font-size: 16px;
-  font-weight: 500;
-  color: #7C7C7C;
+    font-size: 16px;
+    font-weight: 500;
+    color: #7C7C7C;
 }
 .sns-list {
-  font-size: 18px;
-  font-weight: 500;
-  display: flex;
-  gap: 40px;
-  margin-bottom: 141px;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    gap: 40px;
+    margin-bottom: 141px;
 }
 
 /* 커스텀 */
 .sec-1, .sec-2, .sec-3, .sec-4 {
-  min-height: 100vh;
+    min-height: 100vh;
 }
-.v-t-line {
-  width: 1px;
-  height: 250px;
-  background-color: #fff;
-}
+/* .v-t-line {
+    width: 1px;
+    height: 250px;
+    background-color: #fff;
+} */
 .blog-btn {
-  width: 13px;
-  height: 13px;
+    width: 13px;
+    height: 13px;
 }
 
 /* 커스텀 커서를 쓰는 영역에만 커서 숨김 */
@@ -166,40 +169,40 @@ html, body, ul, li, h1, h2, h3, h4, a, p, img {
 
 /* 커서 기본값: 반전 안 함 (mix-blend-mode 제거) */
 .custom-cursor{
-  position: fixed;
-  top: 0; left: 0;
-  width: 80px; height: 80px;
-  background: url('./img/pointer.png') no-repeat center/contain;
-  pointer-events: none;
-  transform: translate3d(-9999px, -9999px, 0) translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.08s linear;
-  z-index: 9999;
-  will-change: transform, opacity, filter; /* ← filter도 프리히트 */
-  contain: layout paint;
-  backface-visibility: hidden;
-  /* mix-blend-mode: difference;  ← 이 줄은 지워줘! */
+    position: fixed;
+    top: 0; left: 0;
+    width: 80px; height: 80px;
+    background: url('./img/pointer.png') no-repeat center/contain;
+    pointer-events: none;
+    transform: translate3d(-9999px, -9999px, 0) translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.08s linear;
+    z-index: 9999;
+    will-change: transform, opacity, filter; /* ← filter도 프리히트 */
+    contain: layout paint;
+    backface-visibility: hidden;
+/* mix-blend-mode: difference;  ← 이 줄은 지워줘! */
 }
 
 /* 이미지 위에서만 반전되도록 */
 .custom-cursor.invert{
-  filter: invert(1) brightness(1.15) contrast(1.05);
+    filter: invert(1) brightness(1.15) contrast(1.05);
 }
 
 .custom-cursor.show{ opacity: 1; }
 .custom-cursor.hidden { opacity: 0 !important; }
 /* ------------------------------------------- top-bar start ------------------------------------------- */
 header {
-  position: fixed;
-  top:0;
-  left: 0;
-  width: 100%;
-  height: 130px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  z-index: 100;
-  border-bottom: 1px solid #ffffff4b;
-  transition: transform .28s ease, background-color .2s ease, border-color .2s ease;
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 130px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+    border-bottom: 1px solid #ffffff4b;
+    transition: transform .28s ease, background-color .2s ease, border-color .2s ease;
 }
 
 
@@ -223,288 +226,327 @@ header.menu-dark { border-bottom-color: #E5E5E5; }
 
 /* 상단 100px 호버존 */
 .top-hover-zone {
-  position: fixed; inset: 0 0 auto 0; height: 100px;
-  z-index: 120; background: transparent; pointer-events: auto;
-  pointer-events: none;
+    position: fixed; inset: 0 0 auto 0; height: 100px;
+    z-index: 120; background: transparent; pointer-events: auto;
+    pointer-events: none;
 }
 
 .top-bar {
-  height: 100%;
-  margin: 0 140px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    height: 100%;
+    margin: 0 140px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .top-logo {
-  width: 200px;
-  height: 36px;
+    width: 200px;
+    height: 36px;
 }
 
 .top-logo-img {
-  width: 199px;
-  height: 36px;
+    width: 199px;
+    height: 36px;
 }
 
 .top-menu {
-  display: flex;
-  gap: 100px;
+    display: flex;
+    gap: 100px;
 }
 /* ------------------------------------------- top-bar end ------------------------------------------- */
 
 /* ------------------------------------------- sec-1 start ------------------------------------------- */
-.sec-1 {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background: url('./img/consulting-1.jpg') top/cover no-repeat;
-  color: #fff;
+.sec-1{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background:#fff;
+    overflow:hidden;
+    color: #fff;
 }
-.sec-1 .bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.2);
+.sec-1 .sec1-stage{
+    background-color: #000;
+    position: relative;
+    width:100%;
+    height:100%;
 }
-.sec-1 .title {
-  position: absolute;
-  z-index: 1;
-  left: 140px;
-  bottom: 162px;
+
+.sec-1 .center-line{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: #fff;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: center center;
+    will-change: transform, opacity;
+    z-index: 2;
 }
-.sec-1 .title-tt {
-  margin-bottom: 53px;
+/* 기존 .center-line 규칙 그대로 두고, 여기에 추가 */
+.sec-1 .center-line { visibility: hidden; opacity: 0; }
+.sec-1 .video-reveal {
+    position: absolute;
+    inset: 0;
+    --gap: 50%;
+    clip-path: inset(0 var(--gap) 0 var(--gap));
+    -webkit-clip-path: inset(0 var(--gap) 0 var(--gap));
+    opacity: 0;
+    will-change: clip-path, opacity;
+    z-index: 1;
+}
+
+.sec-1 .video-title{
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    left: calc(50%);
+    bottom: calc(50%);
+    transform: translate(-50%, 50%);
+}
+/* 문장 공통: 처음엔 살짝 아래/투명 */
+.video-title .video-tt {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .8s ease, transform .8s ease;
+}
+.video-title .video-tt.is-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 라인은 래퍼 고정 높이 + scaleY로 그리기 */
+.v-line-wrap {
+    display: inline-block;
+    position: relative;
+    width: 1px; 
+    height: 250px;
+    margin: 32px 0; 
+    vertical-align: middle; 
+    overflow: hidden;
+}
+.v-t-line {
+    position: absolute; 
+    left:0; 
+    top:0; 
+    width:1px; 
+    height:100%;
+    background:#fff; 
+    transform-origin: top; 
+    transform: scaleY(0);
+    transition: transform 1.8s cubic-bezier(.22,.61,.36,1);
+}
+
+.v-line-wrap.is-drawing .v-t-line { transform: scaleY(1); }
+
+
+.sec-1 .hero-video {
+    display:block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sec-1 .video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
 }
 /* ------------------------------------------- sec-1 end ------------------------------------------- */
 
 /* ------------------------------------------- sec-2 start ------------------------------------------- */
-.sec-2{
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background:#fff;
-  overflow:hidden;
-  color: #fff;
+.sec-2 {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('./img/consulting-1.jpg') top/cover no-repeat;
+    color: #fff;
 }
-.sec2-stage{
-  background-color: #000;
-  position: relative;
-  width:100%;
-  height:100%;
+.sec-2 .bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
 }
-
-.center-line{
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  background: #fff;
-  transform: translateX(-50%) scaleY(0);
-  transform-origin: center center;
-  will-change: transform, opacity;
-  z-index: 2;
+.sec-2 .title {
+    position: absolute;
+    z-index: 1;
+    left: 140px;
+    bottom: 162px;
 }
-/* 기존 .center-line 규칙 그대로 두고, 여기에 추가 */
-.center-line { visibility: hidden; opacity: 0; }
-.video-reveal {
-  position: absolute;
-  inset: 0;
-  --gap: 50%;
-  clip-path: inset(0 var(--gap) 0 var(--gap));
-  -webkit-clip-path: inset(0 var(--gap) 0 var(--gap));
-  opacity: 0;
-  will-change: clip-path, opacity;
-  z-index: 1;
-}
-
-.video-title{
-  position: absolute;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  left: calc(50%);
-  bottom: calc(50%);
-  transform: translate(-50%, 50%);
-}
-
-.hero-video {
-  display:block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.video-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
+.sec-2 .title-tt {
+    margin-bottom: 53px;
 }
 /* ------------------------------------------- sec-2 end ------------------------------------------- */
 
 /* ------------------------------------------- sec-3 start ------------------------------------------- */
 .sec-3 {
-  display: flex;
-  align-items: center;
-  overflow:hidden; 
+    display: flex;
+    align-items: center;
+    overflow:hidden; 
 }
 .sec-3 .con {
-  padding: 0 140px;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-  flex: 1 1 auto;
-  min-width: 0;
+    padding: 0 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .sec-3 .cons-t-tt {
-  margin-bottom: 22px;
+    margin-bottom: 22px;
 }
 
 .sec-3 .cons-swiper,
 .sec-3 .cons-swiper .swiper-wrapper,
 .sec-3 .cons-swiper .swiper-slide {
-  overflow: visible;
+    overflow: visible;
 }
 
 .sec-3 .cons-swiper {
-  position: relative;
-  width: 100%;
-  overflow-x: clip;
+    position: relative;
+    width: 100%;
+    overflow-x: clip;
 }
 .sec-3 .cons-swiper .swiper-wrapper {
-  align-items: stretch;
+    align-items: stretch;
 }
 
 .sec-3 .cons-swiper .swiper-slide {
-  width: 405px;
+    width: 405px;
 }
 .sec-3 .cons-list {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    transition: transform 0.3s ease;
 }
 
 .sec-3 .cons-list:hover {
-  transform: translateY(-30px);
+    transform: translateY(-30px);
 }
 
 .sec-3 .cons-img-box {
-  position: relative;
-  width: 405px;
-  height: 500px;
-  border-radius: 10px;
-  overflow: hidden;
+    position: relative;
+    width: 405px;
+    height: 500px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 .sec-3 .cons-img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
 }
 .sec-3 .cons-img-2 {object-position: 30% 0;}
 .sec-3 .cons-img-4 {object-position: 70% 0;}
 .sec-3 .cons-img-5 {object-position: 20% 0;}
 
 .sec-3 .cons-img-box::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  transition: opacity 0.4s ease;
-  pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    transition: opacity 0.4s ease;
+    pointer-events: none;
 }
 
 .sec-3 .cons-img-box:hover::after {
-  opacity: 0;
+    opacity: 0;
 }
 .sec-3 .cons-list:hover .cons-img {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 @media (max-width: 1440px) {
-  .sec-3 .con { margin: 100px 80px; }
+.sec-3 .con { margin: 100px 80px; }
 }
 @media (max-width: 1024px) {
-  .sec-3 .con { margin: 80px 24px; }
+.sec-3 .con { margin: 80px 24px; }
 }
 
 .sec-3 .cons-text {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 /* ------------------------------------------- sec-3 end ------------------------------------------- */
 
 /* ------------------------------------------- sec-4 start ------------------------------------------- */
 .sec.sec-4{
-  min-height: 100vh;
-  background:#000;
-  color:#fff;
-  display:flex;
-  align-items:center; 
+    min-height: 100vh;
+    background:#000;
+    color:#fff;
+    display:flex;
+    align-items:center; 
 }
 
 .sec-4 .review{
-  position: relative;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .sec-4 .review-box{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
 .sec-4 .review-title {
-  display:flex;
-  flex-direction:column;
-  justify-content: center;
-  gap:27px;
-  height: 370px;
-  padding: 0 140px;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    gap:27px;
+    height: 370px;
+    padding: 0 140px;
 }
 
 .sec-4 .review-menu.swiper{
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow:hidden;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow:hidden;
 }
 
 /* 슬라이드 카드 크기 */
 .sec-4 .review-list.swiper-slide{
-  width: 600px;
-  height: 370px;
-  background:#fff; color:#000;
-  display:flex; flex-direction:column; justify-content:center;
-  box-sizing:border-box; gap: 6px; padding: 48px;
+    width: 600px;
+    height: 370px;
+    background:#fff; color:#000;
+    display:flex; 
+    flex-direction:column; 
+    justify-content:center;
+    box-sizing:border-box;
+    gap: 6px; 
+    padding: 40px;
 }
 
 /* ============== btn 영역 ============== */
 .sec-4 .rv-nav-topright{
-  position:absolute;
-  left: 760px;
-  bottom: -100px;
-  z-index: 10;
-  display:flex; gap:20px;
+    position:absolute;
+    left: 760px;
+    bottom: -100px;
+    z-index: 10;
+    display:flex; gap:20px;
 }
 
 .sec-4 .rv-btn {
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sec-4 .rv-btn img {
-  width: 70px;
-  height: 70px;
-  display: block;
+    width: 70px;
+    height: 70px;
+    display: block;
 }
 
 .sec-4 .rv-btn img {transition: opacity .2s ease, transform .15s ease;}
@@ -515,83 +557,83 @@ header.menu-dark { border-bottom-color: #E5E5E5; }
 
 /* ------------------------------------------- sec-5 start ------------------------------------------- */
 .sec-5{
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
 }
 .sec-5 .con { 
-  width: 100%;
-  margin: 0 140px;
+    width: 100%;
+    margin: 0 140px;
 }
 
 .sec-5 .inquiry-title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 22px;
-  margin-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 100px;
 }
 .sec-5 .inquiry-box {
-  position: relative;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  color: #fff;
-  width: 100%;
-  height: 400px;
-  background: url(./img/inquiry.jpg) center center / cover no-repeat;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #fff;
+    width: 100%;
+    height: 400px;
+    background: url(./img/inquiry.jpg) center center / cover no-repeat;
 }
 .sec-5 .inq-list {
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
-.sec-5 .inq-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.42);
+    .sec-5 .inq-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.42);
 }
 /* ------------------------------------------- sec-5 end ------------------------------------------- */
 
 /* ------------------------------------------- footer start ------------------------------------------- */
-  .footer {
+.footer {
     border-top: 1px solid #B5B5B5;
     min-height: 55vh;      /* 원하면 100vh로도 가능 */
     display: flex;
     align-items: center;
-  }
+}
 
-  .footer .con {
+.footer .con {
     margin: 0 240px;
     width: 100%;
     display: flex;
     justify-content: space-between;
-  }
+}
 
-  .footer .left-box, .footer .right-box {
+.footer .left-box, .footer .right-box {
     display: flex;
     flex-direction: column;
-  }
-  .footer .logo-box {
+}
+.footer .logo-box {
     width: 200px;
     height: 36px;
     margin-bottom: 20px;
-  }
-  .footer .logo-img {
+}
+.footer .logo-img {
     width: 100%;
     height: 100%;
-  }
-  .footer .infor-tt {
+}
+.footer .infor-tt {
     margin-bottom: 100px;
-  }
+}
 
-  .footer .right-box {
+.footer .right-box {
     align-items: flex-end;
-  }
-  .footer .blog-box {
+}
+.footer .blog-box {
     width: 194px;
     height: 44px;
     display: flex;
@@ -601,9 +643,9 @@ header.menu-dark { border-bottom-color: #E5E5E5; }
     background-color: #EFEFEF;
     border-radius: 100px;
     margin-bottom: 25px;
-  }
-  .footer .about {
+}
+.footer .about {
     display: flex;
     gap: 40px;
-  }
-  /* ------------------------------------------- footer end ------------------------------------------- */
+}
+/* ------------------------------------------- footer end ------------------------------------------- */
