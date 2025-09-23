@@ -574,7 +574,7 @@ header.menu-dark { border-bottom-color: #E5E5E5; }
     color: #fff;
     width: 100%;
     height: 400px;
-    background: url(./img/inquiry.jpg) center center / cover no-repeat;
+    background: url('./img/inquiry.jpg') center center / cover no-repeat;
 }
 .sec-5 .inq-list {
     z-index: 10;
