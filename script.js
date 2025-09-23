@@ -291,12 +291,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 휠
     const onWheel = (e) => {
-        if (isDraggingSwiper) return;              // ★ 드래그 중 페이징 차단
-        if (inConsSwiper(e.target) && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-        const dy = e.deltaY;
-        if (Math.abs(dy) < 10) return;
-        e.preventDefault();
-        step(dy > 0 ? 1 : -1);
+      // ★ 브라우저 줌(CTRL/⌘ + 휠)은 그냥 통과시켜야 함
+      if (e.ctrlKey || e.metaKey) return;
+
+      if (isDraggingSwiper) return;
+      if (inConsSwiper(e.target) && Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+
+      const dy = e.deltaY;
+      if (Math.abs(dy) < 10) return;
+
+      e.preventDefault();
+      step(dy > 0 ? 1 : -1);
     };
 
     // 터치
@@ -323,16 +328,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 키보드
     const onKeyDown = (e) => {
-        if (pagingLocked) return;
-        const nextKeys = ['ArrowDown','PageDown','Space'];
-        const prevKeys = ['ArrowUp','PageUp'];
-        if (![...nextKeys,...prevKeys].includes(e.code)) return;
+      // ★ 브라우저/OS 단축키는 통과
+      if (e.ctrlKey || e.metaKey) return;
 
-        const tag = (document.activeElement && document.activeElement.tagName) || '';
-        if (/(INPUT|TEXTAREA|SELECT)/.test(tag)) return;
+      if (pagingLocked) return;
+      const nextKeys = ['ArrowDown','PageDown','Space'];
+      const prevKeys = ['ArrowUp','PageUp'];
+      if (![...nextKeys,...prevKeys].includes(e.code)) return;
 
-        e.preventDefault();
-        step(nextKeys.includes(e.code) ? 1 : -1);
+      const tag = (document.activeElement && document.activeElement.tagName) || '';
+      if (/(INPUT|TEXTAREA|SELECT)/.test(tag)) return;
+
+      e.preventDefault();
+      step(nextKeys.includes(e.code) ? 1 : -1);
     };
 
     window.addEventListener('wheel',      onWheel,     { passive:false });
