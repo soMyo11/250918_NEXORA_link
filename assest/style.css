@@ -3,7 +3,7 @@ html, body { font-family: 'Pretendard Variable', system-ui, -apple-system, 'Sego
 
 html, body { height: auto; scroll-behavior: auto; } /* 우리 코드가 스크롤을 제어함 */
 html, body { overflow-x: hidden; }
-
+html { scrollbar-gutter: stable; } /* 스크롤바 공간 확보 */
 
 /* 노말라이즈 */
 html, body, ul, li, h1, h2, h3, h4, a, p, img {
