@@ -635,24 +635,53 @@ header.menu-dark { border-bottom-color: #E5E5E5; }
     gap: 40px;
     background-color: #EFEFEF;
     border-radius: 100px;
-    margin-bottom: 25px;
+    margin-bottom: 187px;
 }
 .footer .about {
     display: flex;
     gap: 40px;
 }
+
+/* 팝업 기본 */
+.modal { position: fixed; inset: 0; display: none; z-index: 100000; }
+.modal.is-open { display: block; }
+.modal__backdrop {
+    position: absolute; inset: 0; background: rgba(0,0,0,.45);
+    opacity: 0; animation: fade .18s forwards;
+}
+.modal__panel {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.98);
+    width: min(560px, 92vw); background: #fff; border-radius: 16px; padding: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    opacity: 0; animation: pop .22s forwards ease-out;
+    font-family: Pretendard, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.modal__title { font-size: 24px; font-weight: 700; margin: 0 0 20px; }
+.modal__desc { font-size: 18px; line-height: 1.6; color: #333; margin: 0 0 18px; }
+.modal__actions { display: flex; justify-content: flex-end; gap: 8px; }
+.btn {
+    appearance: none; border: 0; border-radius: 10px; padding: 10px 20px; cursor: pointer; font-size: 15px;
+    background: linear-gradient(90deg,#173f8f,#0079B6); color: #fff; font-weight: 600; letter-spacing: 0.04em;
+}
+@keyframes fade { to { opacity: 1; } }
+@keyframes pop { to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
+
+/* 바디 스크롤 잠금 */
+.body-lock { overflow: hidden; }
 /* ------------------------------------------- footer end ------------------------------------------- */
 
 
 @media (max-width: 1440px) {
-.sec-3 .con { margin: 100px 80px; padding: 0; }
-.sec-2 .title { left: 80px; }
-.sec-4 .review-box { display: block; padding: 0 80px; }
-.sec-4 .review-title { padding: 0; height: auto; margin-bottom: 60px; }
-.sec-4 .rv-nav-topright { left: 80px; }
-.sec-5 .con { margin: 0 80px; }
-.footer .con { margin: 0 100px;}
+    .top-bar{ margin: 0 80px; }
+    .top-menu{ gap: 60px }
+    .sec-3 .con { margin: 100px 80px; padding: 0; }
+    .sec-2 .title { left: 80px; }
+    .sec-4 .review-box { display: block; padding: 0 80px; }
+    .sec-4 .review-title { padding: 0; height: auto; margin-bottom: 60px; }
+    .sec-4 .rv-nav-topright { left: 80px; }
+    .sec-5 .con { margin: 0 80px; }
+    .footer .con { margin: 0 100px;}
 }
 @media (max-width: 1024px) {
-.sec-3 .con { margin: 80px 24px; }
+    .sec-3 .con { margin: 80px 24px; }
 }

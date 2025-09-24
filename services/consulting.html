@@ -7,22 +7,54 @@
 </head>
 <body>
   <section>
-    <h2>페이지 준비중입니다.</h2>
+    <h2>메인 페이지 외<br>
+      페이지 준비중입니다.</h2>
+    <a class="home-btn" href="/index.html"><p class="home-t">홈으로 돌아가기</p></a>
   </section>
 </body>
+
 <style>
+  /* 노말라이즈 */
+html, body, ul, li, h1, h2, h3, h4, a, p, img {
+    margin: 0;
+    padding: 0;
+    color:inherit;
+    list-style: none;
+    text-decoration: none;
+    font-weight: inherit;
+}
   section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 1080px;
+    gap: 60px
   }
   h2 {
-    width: 100%;
-    height: 100%;
     font-size: 40px;
     font-weight: 700;
+
+  }
+  .home-btn {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 300px;
+    height: 80px;
+    background-color: rgb(219, 219, 219);
+    border-radius: 100px;
+  }
+  .home-t {
+    font-size: 30px;
+    font-weight: 400;
+  }
+
+  .home-btn:hover {
+    background-color: #000;
+    font-weight: 500;
+    color: #fff;
   }
 </style>
 </html>

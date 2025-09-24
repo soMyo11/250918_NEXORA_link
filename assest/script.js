@@ -462,7 +462,61 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive:true });
 })();
 
-    
-    // 첫 로드 테마 1회 적용
-    applyThemeForSection(getCurrentSectionIndex());
+
+// ==============================
+// 팝업창
+// ==============================
+
+// 첫 로드 테마 1회 적용
+applyThemeForSection(getCurrentSectionIndex());
 })();
+
+// 공통 열기 함수
+function openComingSoon() {
+    const modal = document.getElementById('csModal');
+    if (!modal) return;
+
+    // 스크롤 잠금
+    document.documentElement.classList.add('body-lock');
+
+    // 포커스 관리
+    const previouslyFocused = document.activeElement;
+    modal.dataset.prev = previouslyFocused ? previouslyFocused.className || previouslyFocused.id || '1' : '';
+
+    modal.classList.add('is-open');
+    // 첫 포커스 대상
+    const focusable = modal.querySelector('.btn,[data-close]');
+    if (focusable) focusable.focus();
+
+    // ESC 닫기
+    const onKey = (e) => { if (e.key === 'Escape') closeComingSoon(); };
+    modal._onKey = onKey;
+    document.addEventListener('keydown', onKey, { once: true });
+}
+
+// 공통 닫기 함수
+function closeComingSoon() {
+    const modal = document.getElementById('csModal');
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    document.documentElement.classList.remove('body-lock');
+
+    // 포커스 복귀 (간단 복귀)
+    const prev = modal.dataset.prev;
+    if (prev) { try { document.querySelector('.' + prev)?.focus(); } catch(_){} }
+}
+
+// 트리거: .coming-soon 링크 모두 모달로 전환
+document.addEventListener('click', (e) => {
+    const t = e.target.closest('.coming-soon');
+    if (!t) return;
+    e.preventDefault();
+    openComingSoon();
+});
+
+// 닫기 버튼/배경 클릭
+document.addEventListener('click', (e) => {
+    if (e.target.matches('[data-close]')) {
+    closeComingSoon();
+    }
+});
